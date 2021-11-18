@@ -34,7 +34,7 @@ from pygazelle import release_type as gazellerelease_type
 import headphones
 from headphones.common import USER_AGENT
 from headphones import logger, db, helpers, classes, sab, nzbget, request
-from headphones import utorrent, transmission, notifiers, rutracker, deluge, qbittorrent
+from headphones import utorrent, transmission, notifiers, rutracker, deluge, qbittorrent, bandcamp
 from bencode import bencode, bdecode
 
 # Magnet to torrent services, for Black hole. Stolen from CouchPotato.
@@ -292,6 +292,9 @@ def do_sorted_search(album, new, losslessOnly, choose_specific_download=False):
         if not results and TORRENT_PROVIDERS:
             results = searchTorrent(album, new, losslessOnly, albumlength)
 
+        if not results and headphones.CONFIG.BANDCAMP:
+            results = searchBandcamp(album, new, albumlength)
+
     elif headphones.CONFIG.PREFER_TORRENTS == 1 and not choose_specific_download:
 
         if TORRENT_PROVIDERS:
@@ -300,10 +303,14 @@ def do_sorted_search(album, new, losslessOnly, choose_specific_download=False):
         if not results and NZB_PROVIDERS and NZB_DOWNLOADERS:
             results = searchNZB(album, new, losslessOnly, albumlength)
 
+        if not results and headphones.CONFIG.BANDCAMP:
+            results = searchBandcamp(album, new, albumlength)
+
     else:
 
         nzb_results = None
         torrent_results = None
+        bandcamp_results = None
 
         if NZB_PROVIDERS and NZB_DOWNLOADERS:
             nzb_results = searchNZB(album, new, losslessOnly, albumlength, choose_specific_download)
@@ -311,6 +318,9 @@ def do_sorted_search(album, new, losslessOnly, choose_specific_download=False):
         if TORRENT_PROVIDERS:
             torrent_results = searchTorrent(album, new, losslessOnly, albumlength,
                                             choose_specific_download)
+        
+        if headphones.CONFIG.BANDCAMP:
+            bandcamp_results = searchBandcamp(album, new, albumlength)
 
         if not nzb_results:
             nzb_results = []
@@ -318,7 +328,7 @@ def do_sorted_search(album, new, losslessOnly, choose_specific_download=False):
         if not torrent_results:
             torrent_results = []
 
-        results = nzb_results + torrent_results
+        results = nzb_results + torrent_results + bandcamp_results
 
     if choose_specific_download:
         return results
@@ -504,6 +514,8 @@ def get_year_from_release_date(release_date):
 
     return year
 
+def searchBandcamp(album, new=False, albumlength=None):
+    return bandcamp.search(album)
 
 def searchNZB(album, new=False, losslessOnly=False, albumlength=None,
               choose_specific_download=False):
@@ -829,6 +841,11 @@ def send_to_downloader(data, bestqual, album):
             except Exception as e:
                 logger.error('Couldn\'t write NZB file: %s', e)
                 return
+    
+    elif kind == 'bandcamp':
+        folder_name = bandcamp.download(album, bestqual)
+        logger.info("Setting folder_name to: {}".format(folder_name))
+
     else:
         folder_name = '%s - %s [%s]' % (
             helpers.latinToAscii(album['ArtistName']).encode('UTF-8').replace('/', '_'),
@@ -1856,6 +1873,9 @@ def searchTorrent(album, new=False, losslessOnly=False, albumlength=None,
 
 def preprocess(resultlist):
     for result in resultlist:
+        if result[4] == 'bandcamp':
+            return True, result
+            
         if result[4] == 'torrent':
 
             headers = {}
