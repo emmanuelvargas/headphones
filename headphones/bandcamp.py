@@ -64,9 +64,12 @@ def search(album, albumlength=None, page=1, resultlist=None):
 
             logger.debug("Comparing {} ({}) to {} ({})".format(
                 cleanalbum, cleanartist.lower(), cleanalbum_found, cleanartist_found.lower()))
-            if search(cleanartist.lower(), cleanartist_found.lower()):
+
+            if re.search(cleanartist.lower(), cleanartist_found.lower()):
+                logger.debug("Artist match")
                 #if (cleanartist.lower() == cleanartist_found.lower() and
                 if (cleanalbum.lower() == cleanalbum_found.lower()):
+                    logger.debug("album match")
                     resultlist.append((
                         data['title'], data['size'], data['url'],
                         'bandcamp', 'bandcamp', True))
