@@ -29,7 +29,7 @@ def diff_string(str1, str2):
     tolerance=0.8
     m = SequenceMatcher(None, str1, str2)
     logger.debug("Comparing {} / {} (Ratio :{}:)".format(str1,str2,m.ratio()))
-    print m.ratio()
+    #print m.ratio()
     if (m.ratio() > tolerance ):
         #logger.debug("Comparing {} / {} ({})".format(str1,str2,m.ratio()))
         return True
