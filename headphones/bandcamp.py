@@ -92,7 +92,6 @@ def search(album, albumlength=None, page=1, resultlist=None):
         logger.debug("Calling next page ({})".format(page))
         search(album, albumlength=albumlength,
                page=page, resultlist=resultlist)
-
     return resultlist
 
 
