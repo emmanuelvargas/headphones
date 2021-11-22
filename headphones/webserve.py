@@ -1417,7 +1417,10 @@ class WebInterface(object):
             "join_apikey": headphones.CONFIG.JOIN_APIKEY,
             "join_deviceid": headphones.CONFIG.JOIN_DEVICEID,
             "use_bandcamp": checked(headphones.CONFIG.BANDCAMP),
-            "bandcamp_dir": headphones.CONFIG.BANDCAMP_DIR
+            "bandcamp_dir": headphones.CONFIG.BANDCAMP_DIR,
+            "use_deezer": checked(headphones.CONFIG.DEEZER),
+            "deezer_dir": headphones.CONFIG.DEEZER_DIR,
+            "deezer_arl": headphones.CONFIG.DEEZER_ARL
         }
 
         for k, v in config.iteritems():
@@ -1486,7 +1489,7 @@ class WebInterface(object):
             "songkick_enabled", "songkick_filter_enabled",
             "mpc_enabled", "email_enabled", "email_ssl", "email_tls", "email_onsnatch",
             "customauth", "idtag", "deluge_paused",
-            "join_enabled", "join_onsnatch", "use_bandcamp"
+            "join_enabled", "join_onsnatch", "use_bandcamp", "use_deezer"
         ]
         for checked_config in checked_configs:
             if checked_config not in kwargs:
