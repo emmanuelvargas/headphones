@@ -320,6 +320,23 @@
                                     <small>Full path where raw MP3s will be stored, e.g. /Users/name/Downloads/bandcamp</small>
                                 </div>
                             </fieldset>
+                            <fieldset title="Method for downloading Deezer files.">
+                                <legend>Deezer</legend>
+                                <div class="row">
+                                    <label title="Path to folder where Headphones can store raw downloads from deezer.">
+                                        Deezer Directory
+                                    </label>
+                                    <input type="text" name="deezer_dir" value="${config['deezer_dir']}" size="50">
+                                    <small>Full path where raw MP3s will be stored, e.g. /Users/name/Downloads/deezer</small>
+                                </div>
+                                <div class="row">
+                                    <label title="arl from deezer cookie">
+                                        arl
+                                    </label>
+                                    <input type="text" name="deezer_arl" value="${config['deezer_arl']}" size="50">
+                                    <small>Login to deezer.com, Click the lock icon in search bar, scroll down to arl copy/paste</small>
+                                </div>
+                            </fieldset>
                         </td>
                         <td>
                             <fieldset title="Method for downloading torrent files.">
@@ -597,7 +614,13 @@
                                         <input id="use_bandcamp" type="checkbox" class="bigcheck" name="use_bandcamp" value="1" ${config['use_bandcamp']} /><label for="use_bandcamp"><span class="option">Bandcamp</span></label>
                                     </div>
                                 </fieldset>
+                                <fieldset>
+                                    <div class="row checkbox left">
+                                        <input id="use_deezer" type="checkbox" class="bigcheck" name="use_deezer" value="1" ${config['use_deezer']} /><label for="use_deezer"><span class="option">Deezer</span></label>
+                                    </div>
+                                </fieldset>
                             </fieldset>
+
                         </td>
                         <td>
                             <fieldset>

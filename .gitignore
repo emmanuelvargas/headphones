@@ -71,3 +71,7 @@ _ReSharper*/
 
 # Python virtual env
 venv
+
+# deemix arl file
+.arl
+config.json

@@ -58,6 +58,8 @@
                 fileid = 'nzb'
 			if item['URL'].find('bandcamp') != -1:
                 fileid = 'bandcamp'
+			if item['URL'].find('deezer') != -1:
+                fileid = 'deezer'
 
             folder = 'Folder: ' + item['FolderName']
 

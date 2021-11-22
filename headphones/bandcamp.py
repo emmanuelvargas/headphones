@@ -20,10 +20,20 @@ import re
 
 from headphones import logger, helpers, metadata, request
 from headphones.common import USER_AGENT
+from difflib import SequenceMatcher
 
 from beets.mediafile import MediaFile, UnreadableFileError
 from bs4 import BeautifulSoup
 
+def diff_string(str1, str2):
+    tolerance=0.8
+    m = SequenceMatcher(None, str1, str2)
+    logger.debug("Comparing {} / {} (Ratio :{}:)".format(str1,str2,m.ratio()))
+    #print m.ratio()
+    if (m.ratio() > tolerance ):
+        #logger.debug("Comparing {} / {} ({})".format(str1,str2,m.ratio()))
+        return True
+    return False
 
 def search(album, albumlength=None, page=1, resultlist=None):
     dic = {'...': '', ' & ': ' ', ' = ': ' ', '?': '', '$': 's', ' + ': ' ',
@@ -68,7 +78,8 @@ def search(album, albumlength=None, page=1, resultlist=None):
             if re.search(cleanartist.lower(), cleanartist_found.lower()):
                 logger.debug("Artist match")
                 #if (cleanartist.lower() == cleanartist_found.lower() and
-                if (cleanalbum.lower() == cleanalbum_found.lower()):
+                if (diff_string(cleanalbum.lower(), cleanalbum_found.lower())):
+                #if (cleanalbum.lower() == cleanalbum_found.lower()):
                     logger.debug("album match")
                     resultlist.append((
                         data['title'], data['size'], data['url'],
@@ -81,7 +92,6 @@ def search(album, albumlength=None, page=1, resultlist=None):
         logger.debug("Calling next page ({})".format(page))
         search(album, albumlength=albumlength,
                page=page, resultlist=resultlist)
-
     return resultlist
 
 

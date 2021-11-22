@@ -25,6 +25,7 @@ import datetime
 
 import os
 import cherrypy
+#import deezer
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from headphones import versioncheck, logger
