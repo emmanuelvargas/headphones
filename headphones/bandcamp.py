@@ -20,10 +20,20 @@ import re
 
 from headphones import logger, helpers, metadata, request
 from headphones.common import USER_AGENT
+from difflib import SequenceMatcher
 
 from beets.mediafile import MediaFile, UnreadableFileError
 from bs4 import BeautifulSoup
 
+def diff_string(str1, str2):
+    tolerance=0.8
+    m = SequenceMatcher(None, str1, str2)
+    logger.debug("Comparing {} / {} (Ratio :{}:)".format(str1,str2,m.ratio()))
+    print m.ratio()
+    if (m.ratio() > tolerance ):
+        #logger.debug("Comparing {} / {} ({})".format(str1,str2,m.ratio()))
+        return True
+    return False
 
 def search(album, albumlength=None, page=1, resultlist=None):
     dic = {'...': '', ' & ': ' ', ' = ': ' ', '?': '', '$': 's', ' + ': ' ',
@@ -62,13 +72,18 @@ def search(album, albumlength=None, page=1, resultlist=None):
 
             logger.debug(u"{} - {}".format(data['album'], cleanalbum_found))
 
-            logger.debug("Comparing {} to {}".format(
-                cleanalbum, cleanalbum_found))
-            if (cleanartist.lower() == cleanartist_found.lower() and
-                    cleanalbum.lower() == cleanalbum_found.lower()):
-                resultlist.append((
-                    data['title'], data['size'], data['url'],
-                    'bandcamp', 'bandcamp', True))
+            logger.debug("Comparing {} ({}) to {} ({})".format(
+                cleanalbum, cleanartist.lower(), cleanalbum_found, cleanartist_found.lower()))
+
+            if re.search(cleanartist.lower(), cleanartist_found.lower()):
+                logger.debug("Artist match")
+                #if (cleanartist.lower() == cleanartist_found.lower() and
+                if (diff_string(cleanalbum.lower(), cleanalbum_found.lower())):
+                #if (cleanalbum.lower() == cleanalbum_found.lower()):
+                    logger.debug("album match")
+                    resultlist.append((
+                        data['title'], data['size'], data['url'],
+                        'bandcamp', 'bandcamp', True))
         else:
             continue
 
