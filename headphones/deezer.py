@@ -94,7 +94,7 @@ def download(album, bestqual):
 
 	# working dir for deemix and arl file
 	pathcwd = os.path.join(
-		os.path.abspath(os.getcwd()),
+		"/app/headphones/",
 		"tools/deemix/")
 	pathcwd = helpers.latinToAscii(pathcwd)
 
