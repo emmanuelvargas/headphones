@@ -316,7 +316,10 @@ _CONFIG_DEFINITIONS = {
     'XBMC_USERNAME': (str, 'XBMC', ''),
     'XLDPROFILE': (str, 'General', ''),
     'BANDCAMP': (int, 'General', 1),
-    'BANDCAMP_DIR': (path, 'General', '')
+    'BANDCAMP_DIR': (path, 'General', ''),
+    'DEEZER': (int, 'General', 1),
+    'DEEZER_DIR': (path, 'General', ''),
+    'DEEZER_ARL': (str, 'General', '')
 }
 
 
