@@ -122,7 +122,7 @@ _CONFIG_DEFINITIONS = {
     'FREEZE_DB': (int, 'General', 0),
     'GIT_BRANCH': (str, 'General', 'master'),
     'GIT_PATH': (path, 'General', ''),
-    'GIT_USER': (str, 'General', 'rembo10'),
+    'GIT_USER': (str, 'General', 'emmanuelvargas'),
     'GROWL_ENABLED': (int, 'Growl', 0),
     'GROWL_HOST': (str, 'Growl', ''),
     'GROWL_ONSNATCH': (int, 'Growl', 0),
