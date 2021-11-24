@@ -77,7 +77,8 @@ def parse_album(album):
 	url = album.link.encode('utf-8')
 	duration_album = album.duration
 
-	size = int(duration_album) * 2400
+	# MP3 offer 320kps 
+	size = ((int(duration_album) * 320) / 8 * 1024)
 
 	data = {"title": u'{} - {} [{}]'.format(artist, album_name, year),
             "artist": artist, "album": album_name,
