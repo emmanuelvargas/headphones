@@ -54,7 +54,7 @@ def search(album, albumlength=None, page=1, resultlist=None):
 	
 	client = deezercustom.Client()
 
-	search_result = client.advanced_search({"album": cleanalbum.lower()}, relation="album")
+	search_result = client.advanced_search({"album": cleanalbum.lower(), "artist": cleanartist.lower(), "limit": 100}, relation="album")
 
 	for album in search_result:
 		albumtitle_clean = re.sub(r"\([^()]*\)", "", album.title) # removing parenthesis in album title
