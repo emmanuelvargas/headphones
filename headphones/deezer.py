@@ -37,7 +37,7 @@ def diff_string(str1, str2):
 	return False
 
 def search(album, albumlength=None, page=1, resultlist=None):
-	logger.debug("Deezer Search")
+	logger.info("Deezer Search")
 
 	dic = {'...': '', ' & ': ' ', ' = ': ' ', '?': '', '$': 's', ' + ': ' ',
 			'"': '', ',': '', '*': '', '.': '', ':': ''}
@@ -54,24 +54,45 @@ def search(album, albumlength=None, page=1, resultlist=None):
 	
 	client = deezercustom.Client()
 
+	logger.info("searching on deezer : album {} // artist{} ".format(cleanalbum.lower(),cleanartist.lower()))
 	search_result = client.advanced_search({"album": cleanalbum.lower(), "artist": cleanartist.lower(), "limit": 100}, relation="album")
+	logger.info("Nbr of result : {}".format(str(len(search_result))))
 
 	for album in search_result:
 		albumtitle_clean = re.sub(r"\([^()]*\)", "", album.title) # removing parenthesis in album title
-		if (diff_string(albumtitle_clean.lower(), cleanalbum.lower())):
-			if (diff_string(album.artist.name.lower(), cleanartist.lower())):
-				logger.debug("Album AND Artist MATCH")
-				alb = client.get_album(album.id)
-				data = parse_album(alb)
-				resultlist.append((
-                    data['title'], data['size'], data['url'],
-                    'deezer', 'deezer', True))
+		cleanalbumDz = helpers.latinToAscii(
+        	helpers.replace_all(albumtitle_clean, dic)
+        	).strip()
+		cleanartistDz = helpers.latinToAscii(
+        	helpers.replace_all(album.artist.name.lower(), dic)
+        	).strip()
+
+		logger.info("{} // {}".format(cleanalbumDz.lower(), cleanalbum.lower()))
+		logger.info("{} // {}".format(cleanartistDz.lower(), cleanartist.lower()))
+		if (diff_string(cleanalbumDz.lower(), cleanalbum.lower())):
+			#if (diff_string(album.artist.name.lower(), cleanartist.lower())):
+			#logger.debug("Album AND Artist MATCH")
+			alb = client.get_album(album.id)
+			data = parse_album(alb)
+			resultlist.append((
+				data['title'], data['size'], data['url'],
+				'deezer', 'deezer', True))
 	pprint.pprint(resultlist)
 	return resultlist
 
 def parse_album(album):
-	artist = album.artist.name.encode('utf-8')
-	album_name = album.title.encode('utf-8')
+	dic = {'...': '', ' & ': ' ', ' = ': ' ', '?': '', '$': 's', ' + ': ' ',
+			'"': '', ',': '', '*': '', '.': '', ':': ''}
+
+	album_name = helpers.latinToAscii(
+        	helpers.replace_all(album.title, dic)
+        	).strip()
+	artist = helpers.latinToAscii(
+        	helpers.replace_all(album.artist.name.lower(), dic)
+        	).strip()
+
+	# artist = album.artist.name.encode('utf-8')
+	# album_name = album.title.encode('utf-8')
 	ddate = format(album.release_date.encode('utf-8')).split("-")
 	year = ddate[0]
 	url = album.link.encode('utf-8')
@@ -106,7 +127,7 @@ def download(album, bestqual):
 	arlfile = helpers.latinToAscii(arlfile)
 	url = bestqual[2].decode('utf-8')
 
-	logger.debug("DOWNLOAD INFO :{}: :{}: :{}:".format(directory, url, pathcwd))
+	logger.info("DOWNLOAD INFO :{}: :{}: :{}:".format(directory, url, pathcwd))
 
 	if not os.path.exists(directory):
 		try:
